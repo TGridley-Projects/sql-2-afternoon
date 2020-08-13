@@ -145,3 +145,75 @@ SELECT DISTINCT company
 FROM customer;
 
 -- DELETE ROWS
+-- #1
+-- Table created 
+
+-- #2
+DELETE FROM practice_delete
+WHERE type = 'bronze';
+
+-- #3
+DELETE FROM practice_delete
+WHERE type = 'silver';
+
+-- #4
+DELETE FROM practice_delete
+WHERE value = 150;
+
+-- eCommerce Simulation
+CREATE TABLE users(
+    user_id SERIAL PRIMARY KEY,
+    user_name VARCHAR(50),
+    user_email VARCHAR(75)
+);
+
+CREATE TABLE products(
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(30),
+    price NUMERIC
+);
+
+CREATE TABLE orders(
+    order_id SERIAL PRIMARY KEY,
+    order_number INTEGER,
+    product_id INTEGER REFERENCES products(product_id),
+    quantity INTEGER
+);
+
+INSERT INTO users
+(user_name, user_email)
+VALUES
+('Bob Ross', 'painterExtroidinare@iteach.you'),
+('Ferris Beuler', 'who_me@igotawaywith.it'),
+('Happy Gilmore', 'hockey4life@golfis.ok');
+
+INSERT INTO products
+(product_name, price)
+VALUES
+('Paint Ball Gun', 59.95),
+('Lucky Rabbits Foot', 7.00),
+('Beach Ball', 3.50);
+
+INSERT INTO orders
+(order_number, product_id, quantity)
+VALUES
+(001, 1, 5),
+(001, 3, 2),
+(002, 2, 12),
+(002, 1, 1),
+(002, 3, 5),
+(003, 3, 100);
+
+SELECT p.product_name FROM products p 
+JOIN orders o ON o.product_id = p.product_id
+WHERE o.order_number = 001;
+
+SELECT * FROM orders;
+
+SELECT SUM(o.quantity * p.price)
+FROM orders o 
+JOIN products p ON p.product_id = o.product_id
+WHERE o.order_number = 002;
+
+ALTER TABLE users
+ADD COLUMN order_id INTEGER REFERENCES orders(order_id);
